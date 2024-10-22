@@ -1,14 +1,15 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../config/db';
 
-class Purchase extends Model {
+class Stock extends Model {
     public id!: number;
     public producto_id!: number;
-    public fecha_compra!: Date;
-    public direccion_envio!: string;
+    public fecha_transaccion!: Date;
+    public cantidad!: number;
+    public entrada_salida!: number; // 1: entrada, 2: salida
 }
 
-Purchase.init({
+Stock.init({
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -18,20 +19,27 @@ Purchase.init({
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    fecha_compra: {
+    fecha_transaccion: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,
     },
-    direccion_envio: {
-        type: DataTypes.STRING,
+    cantidad: {
+        type: DataTypes.FLOAT,
         allowNull: false,
+    },
+    entrada_salida: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+            isIn: [[1, 2]], // 1 para entrada, 2 para salida
+        },
     },
 }, {
     sequelize,
-    modelName: 'Purchase',
-    tableName: 'purchases',
+    modelName: 'Stock',
+    tableName: 'stocks',
     timestamps: false,
 });
 
-export default Purchase;
+export default Stock;
